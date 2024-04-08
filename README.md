@@ -2,6 +2,7 @@
 
 For reference visit: https://github.com/mosh-hamedani/react-testing-starter
 
+Github repo: https://github.com/jisshub/React-Testing-Tutorial-Notes-Mosh
 
 ## Install Vitest and vitest:ui
 
