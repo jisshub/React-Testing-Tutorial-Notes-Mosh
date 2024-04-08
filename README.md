@@ -4,6 +4,9 @@ For reference visit: https://github.com/mosh-hamedani/react-testing-starter
 
 Github repo: https://github.com/jisshub/React-Testing-Tutorial-Notes-Mosh
 
+For tutorial visit: https://www.youtube.com/watch?v=8Xwq35cPwYg&t=487s
+
+
 ## Install Vitest and vitest:ui
 
 ```bash
@@ -43,8 +46,12 @@ npm i @testing-library/react
 npm i -D jsdom@24.0.0
 ```
 
+## Vitest config file
+
+- Create vitest.config.ts file in root folder of the project.
 
 
+Time: 19: 02
 
 
 
