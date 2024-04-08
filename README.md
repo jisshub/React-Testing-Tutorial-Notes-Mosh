@@ -69,6 +69,20 @@ npm i -D @testing-library/jest-dom
 
 ## Testing Rendering
 
+*src\components\Greet.tsx*
+
+```ts
+const Greet = ({ name }: { name?: string }) => {
+  if (name) return <h1>Hello {name}</h1>;
+
+  return <button>Login</button>;
+};
+
+export default Greet;
+
+```
+
+*test\components\Greet.test.ts*
 ```ts
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { it, expect, describe } from "vitest";
@@ -92,6 +106,15 @@ describe("Greet", () => {
   });
 });
 ```
+
+In the test suite, `getByRole('heading')` and `getByRole('button')` are queries provided by the Testing Library (specifically, `@testing-library/react`) used to select elements based on their [ARIA roles](https://www.w3.org/TR/wai-aria/#role_definitions). These queries help ensure that your components are accessible and function correctly for users with assistive technologies.
+
+- `getByRole('heading')` is used to select the first element in the document that is recognized as a heading element (such as `<h1>`, `<h2>`, etc.). In the context of your test, it's used to find the `<h1>` element that renders "Hello {name}" when a name is passed to the Greet component.
+
+- `getByRole('button')` is used to select the first element that is recognized as a button. In your test, it's used to find the `<button>` element that renders "Login" when no name is passed to the Greet  component.
+
+These queries are part of the Testing Library's approach to encourage testing components in a way that reflects how users interact with the UI, focusing on accessibility and usability.
+
 
 
 
