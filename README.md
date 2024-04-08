@@ -115,6 +115,111 @@ In the test suite, `getByRole('heading')` and `getByRole('button')` are queries 
 
 These queries are part of the Testing Library's approach to encourage testing components in a way that reflects how users interact with the UI, focusing on accessibility and usability.
 
+## Testing User Account
+
+*src\components\UserAccount.tsx*
+
+```ts
+import { User } from "../entities";
+
+const UserAccount = ({ user }: { user: User }) => {
+  return (
+    <>
+      <h2>User Profile</h2>
+      {user.isAdmin && <button>Edit</button>}
+      <div>
+        <strong>Name:</strong> {user.name}
+      </div>
+    </>
+  );
+};
+
+export default UserAccount;
+
+```
+
+*test\components\UserAccount.test.ts*
+
+```ts
+import { it, expect, describe } from "vitest";
+import { render, screen } from "@testing-library/react";
+import UserAccount from "../../src/components/UserAccount";
+import { User } from "../../src/entities";
+
+describe("UserAccount", () => {
+  it("should render user name", () => {
+    // Setup
+    const user: User = {
+      id: 1,
+      name: "John",
+      isAdmin: true,
+    };
+
+    // Execution
+    render(UserAccount({ user: user }));
+
+    // Assertion
+    expect(screen.getByText(user.name)).toBeInTheDocument();
+  });
+
+  it("should render the edit button if the user is admin", () => {
+    // Setup
+    const user: User = {
+      id: 1,
+      name: "John",
+      isAdmin: true,
+    };
+
+    // Execution
+    render(UserAccount({ user: user }));
+
+    // Assertion
+    const button = screen.getByRole("button");
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveTextContent("Edit");
+  });
+
+  it("should not render the edit button if the user is not admin", () => {
+    // Setup
+    const user: User = {
+      id: 1,
+      name: "John",
+      isAdmin: false,
+    };
+
+    // Execution
+    render(UserAccount({ user: user }));
+
+    // Assertion
+    const button = screen.queryByRole("button");
+    expect(button).not.toBeInTheDocument();
+  });
+});
+
+```
+
+Explanation
+-----------
+The choice between `getByRole('button')` and `queryByRole('button')` in these test cases is based on the expected outcome of rendering the UserAccount component under different conditions, specifically related to the presence or absence of the "Edit" button based on the isAdmin property of the user object.
+
+1. **`getByRole('button')` in "should render the edit button if the user is admin" test case:**
+
+   - getByRole is used when you expect an element to be present in the DOM. It throws an error if the element cannot be found, which immediately fails the test. This behavior is desirable when testing conditions that should result in the presence of an element, as it provides a clear and direct assertion that the element exists.
+
+   - In the "should render the edit button if the user is admin" test case, the expectation is that the "Edit" button is rendered because `user.isAdmin` is `true`. Therefore, using `getByRole('button')` is appropriate because you expect the button to exist, and if it doesn't, the test should fail.
+
+
+2. **`queryByRole('button')` in "should not render the edit button if the user is not admin" test case:**
+
+    - queryByRole is used when you want to assert that an element is not present in the DOM. Unlike getByRole, it does not throw an error if the element cannot be found; instead, it returns `null`. This behavior is useful for verifying the absence of an element, as it allows you to assert that the result of queryByRole is `null` (or, in the case of Testing Library, that `not.toBeInTheDocument()`).
+
+    - In the "should not render the edit button if the user is not admin" test case, the "Edit" button should not be rendered because `user.isAdmin` is `false`. Using `queryByRole('button')` is appropriate here because you're testing for the absence of the button, and the test should only fail if the button unexpectedly appears.
+
+    - In summary, `getByRole`  is used when an element is expected to be present (and its absence should fail the test), while `queryByRole`is used when an element's absence is being verified (and its presence should fail the test).
+
+
+
+
 
 
 
