@@ -218,6 +218,70 @@ The choice between `getByRole('button')` and `queryByRole('button')` in these te
     - In summary, `getByRole`  is used when an element is expected to be present (and its absence should fail the test), while `queryByRole`is used when an element's absence is being verified (and its presence should fail the test).
 
 
+## Testing Lists
+
+*src\components\UserList.tsx*
+
+```tsx
+import { User } from "../entities";
+
+const UserList = ({ users }: { users: User[] }) => {
+  if (users.length === 0) return <p>No users available.</p>;
+
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>
+          <a href={`/users/${user.id}`}>{user.name}</a>
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default UserList;
+
+```
+
+test\components\UserList.test.ts
+```ts
+import { it, expect, describe } from "vitest";
+import { render, screen } from "@testing-library/react";
+import UserList from "../../src/components/UserList";
+import { User } from "../../src/entities";
+
+describe("UserList", () => {
+  it("should render no users when users array is empty", () => {
+    // Execution
+    render(UserList({ users: [] }));
+
+    // Assertions
+    expect(screen.getByText(/no users/i)).toBeInTheDocument();
+  });
+
+  it("should render a list of users", () => {
+    // Setup
+    const users: User[] = [
+      {
+        id: 1,
+        name: "John",
+      },
+      {
+        id: 2,
+        name: "Teresa",
+      },
+    ];
+    // Execution
+    render(UserList({ users: users }));
+
+    // Assertions
+    expect(screen.getByText(/john/i)).toBeInTheDocument();
+  });
+});
+
+```
+
+Time: 46:00
 
 
 
