@@ -49,9 +49,51 @@ npm i -D jsdom@24.0.0
 ## Vitest config file
 
 - Create vitest.config.ts file in root folder of the project.
+- Configure the file to use jsdom as an environment.
+
+```ts
+import { defineConfig } from 'vitest/config';
+export default defineConfig({
+    test: {
+        environment: 'jsdom',
+    },
+});
+```
+
+- Next install @testing-library/jest-dom.
+
+```bash
+npm i -D @testing-library/jest-dom
+```
 
 
-Time: 19: 02
+## Testing Rendering
+
+```ts
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { it, expect, describe } from "vitest";
+import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom/vitest";
+import Greet from "../../src/components/Greet";
+
+describe("Greet", () => {
+  it("should render Hello with the given name when the name is passed", () => {
+    render(Greet({ name: "John" }));
+    const heading = screen.getByRole("heading");
+    expect(heading).toBeInTheDocument();
+    expect(heading).toHaveTextContent(/hello john/i);
+  });
+
+  it("should render Login when the name is not passed", () => {
+    render(Greet({ name: undefined }));
+    const button = screen.getByRole("button");
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveTextContent(/login/i);
+  });
+});
+```
+
+
 
 
 
