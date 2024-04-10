@@ -245,6 +245,7 @@ export default UserList;
 
 test\components\UserList.test.ts
 ```ts
+import "@testing-library/jest-dom";
 import { it, expect, describe } from "vitest";
 import { render, screen } from "@testing-library/react";
 import UserList from "../../src/components/UserList";
@@ -252,8 +253,24 @@ import { User } from "../../src/entities";
 
 describe("UserList", () => {
   it("should render no users when users array is empty", () => {
+    const users: User[] = [
+      {
+        id: 1,
+        name: "John",
+      },
+      {
+        id: 2,
+        name: "Teresa",
+      },
+    ];
     // Execution
-    render(UserList({ users: [] }));
+    render(UserList({ users }));
+
+    users.forEach((user) => {
+      const link = screen.getByRole("link", { name: user.name });
+      expect(link).toBeInTheDocument();
+      expect(link.getAttribute("href")).toBe(`/users/${user.id}`);
+    });
 
     // Assertions
     expect(screen.getByText(/no users/i)).toBeInTheDocument();
@@ -278,6 +295,7 @@ describe("UserList", () => {
     expect(screen.getByText(/john/i)).toBeInTheDocument();
   });
 });
+
 
 ```
 
