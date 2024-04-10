@@ -299,7 +299,113 @@ describe("UserList", () => {
 
 ```
 
-Time: 46:00
+## Testing Product Image Gallery
+
+### Component Code
+
+*src\components\ProductImageGallery.tsx*
+------------------------------------------
+
+```tsx
+const ProductImageGallery = ({ imageUrls }: { imageUrls: string[] }) => {
+  if (imageUrls.length === 0) return null;
+
+  return (
+    <ul>
+      {imageUrls.map((url) => (
+        <li key={url}>
+          <img src={url} />
+        </li>
+      ))}
+    </ul>
+  );
+};
+
+export default ProductImageGallery;
+
+```
+
+### Testing Code
+
+*test\components\ProductImageGallery.test.ts*
+------------------------------------------
+```ts
+import { it, expect, describe } from "vitest";
+import "@testing-library/jest-dom";
+import { render, screen } from "@testing-library/react";
+import ProductImageGallery from "../../src/components/ProductImageGallery";
+
+describe("ProductImageGallery", () => {
+  it("should render no images when images array is empty", () => {
+    const images: string[] = [];
+    // Execution
+    render(ProductImageGallery({ imageUrls: images }));
+    // Assertions
+    const list = screen.queryByRole("list");
+    expect(list).not.toBeInTheDocument();
+  });
+
+  //   it should render images when images array is not empty
+  it("should render images when images array is not empty", () => {
+    const imageUrls: string[] = [
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "https://images.unsplash.com/photo-14947901083",
+    ];
+    // Execution
+    render(ProductImageGallery({ imageUrls: imageUrls }));
+    // Assertions
+    const list = screen.getByRole("list");
+    expect(list).toBeInTheDocument();
+
+    const images = screen.getAllByRole("img");
+    expect(images).toHaveLength(imageUrls.length);
+    imageUrls.forEach((url, index) =>
+      expect(images[index]).toHaveAttribute("src", url)
+    );
+  });
+});
+```
+
+### Test Suite for ProductImageGallery Component
+
+
+This test suite verifies the functionality of the ProductImageGallery component using the Testing Library and Vitest. The component is expected to render a list of images based on the imageUrls prop provided to it. The suite contains two primary test cases:
+
+
+1. **Test Case: Rendering No Images When Array is Empty**
+
+  This test verifies that the component correctly handles an empty array of image URLs. When no image URLs are provided, the component should not render a list element (`<ul>`).
+
+  
+   - **Setup**: An empty array of image URLs is created.
+   
+   - **Execution**: The ProductImageGallery component is rendered with this empty array.
+
+   - **Assertion**: It is asserted that no list (`<ul>`) element is present in the document, indicating that the component does not render anything when there are no images to display.
+
+
+2. **Test Case: Rendering Images When Array is Not Empty**
+
+   This test checks the component's behavior when it is provided with an array of image URLs. The component should render a list of images, with each image's src attribute set to the corresponding URL from the array.
+
+  
+   - **Setup**: An array of image URLs is created.
+   
+   - **Execution**: The ProductImageGallery component is rendered with this array of image URLs.
+   
+   - **Assertion**:
+   
+     - It is first asserted that a list (`<ul>`) element is present in the document, indicating that the component renders a list when there are images to display.
+    
+     - Then, it is verified that the number of `<img>` elements matches the length of the image URLs array, ensuring that an image is rendered for each URL.
+
+     - Finally, each `<img>` element's src attribute is checked against the corresponding URL in the array to ensure that images are correctly sourced from the provided URLs.
+  
+  These tests ensure that the ProductImageGallery  component behaves as expected, both when there are no images to display and when a list of images should be rendered. By covering these scenarios, the test suite helps maintain the component's reliability and functionality as the application evolves.
+
+
+
 
 
 
