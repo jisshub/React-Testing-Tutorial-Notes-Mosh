@@ -405,6 +405,10 @@ This test suite verifies the functionality of the ProductImageGallery component 
   These tests ensure that the ProductImageGallery  component behaves as expected, both when there are no images to display and when a list of images should be rendered. By covering these scenarios, the test suite helps maintain the component's reliability and functionality as the application evolves.
 
 
+## Testing User Interaction
+
+Time: 53: 15
+
 
 
 
